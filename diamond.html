@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>We Found Love</title>
+  <link rel="stylesheet" href="diamond.css">
+</head>
+<body>
+  <main id="stage">
+    <div id="diamonds" class="diamonds"></div>
+
+    <svg class="mountains" viewBox="0 0 1100 220" preserveAspectRatio="none">
+      <path d="M0 145 L130 70 L240 135 L370 55 L510 140 L650 65 L800 135 L930 70 L1100 135 V220 H0Z"/>
+      <path class="ridge" d="M0 170 H1100"/>
+      <path class="ridge ridge-dash" d="M0 190 H1100"/>
+    </svg>
+
+    <div class="carbox">
+      <svg class="car" viewBox="0 0 300 120" aria-label="G-Wagon">
+        <defs>
+          <linearGradient id="paint" x1="0" x2="1">
+            <stop offset="0" stop-color="#111b22"/>
+            <stop offset=".5" stop-color="#566873"/>
+            <stop offset="1" stop-color="#111b22"/>
+          </linearGradient>
+        </defs>
+
+        <path class="car-body"
+          d="M18 78 L25 42 Q28 25 48 25 H202 Q224 25 238 48 L272 65 L278 82 H18Z"/>
+
+        <path class="window"
+          d="M48 29 H101 V58 H38 L43 38 Q44 30 48 29Z"/>
+        <path class="window"
+          d="M108 29 H163 L180 58 H108Z"/>
+        <path class="window"
+          d="M170 29 H202 Q220 31 232 48 L240 58 H185Z"/>
+
+        <line class="trim" x1="108" y1="29" x2="108" y2="58"/>
+        <line class="trim" x1="185" y1="29" x2="185" y2="58"/>
+
+        <rect class="light" x="235" y="61" width="29" height="9" rx="3"/>
+        <rect class="light" x="24" y="61" width="18" height="9" rx="3"/>
+
+        <circle class="wheel" cx="73" cy="84" r="20"/>
+        <circle class="hub" cx="73" cy="84" r="8"/>
+        <circle class="wheel" cx="226" cy="84" r="20"/>
+        <circle class="hub" cx="226" cy="84" r="8"/>
+
+        <rect class="handle" x="154" y="63" width="18" height="3" rx="2"/>
+        <path class="mirror" d="M237 42 L253 48 L253 58 H239Z"/>
+      </svg>
+    </div>
+
+    <section class="lyrics">
+      <div class="track">
+        <p class="gold">Golden diamonds in the night</p>
+        <p>We are standing side by side</p>
+        <p class="blue">Let the quiet sky come alive</p>
+        <br>
+        <p class="big gold">We found love in a hopeful place</p>
+        <p class="big rose">We found love in a hopeful place</p>
+        <p class="big blue">We found love in a hopeful place</p>
+        <br>
+        <p>Shining softly through the dark</p>
+        <p class="rose">Every light becomes a spark</p>
+        <p>And the night is ours to keep</p>
+        <br>
+        <p class="big gold">We found love in a hopeful place</p>
+        <p class="big blue">We found love in a hopeful place</p>
+        <!-- ...existing lyrics... -->
+
+<br>
+<p class="blue">Underneath the silver sky</p>
+<p>Every little star is shining bright</p>
+<p class="rose">We can leave the world behind</p>
+<p>With a little hope and you by my side</p>
+<br>
+<p class="big gold">Dancing underneath the moonlight</p>
+<p class="big blue">Everything is going to be alright</p>
+<p class="big rose">We found love in a hopeful place</p>
+<p>And we will keep it safe tonight</p>
+
+<!-- ...existing code... -->
+      </div>
+    </section>
+
+    <section class="heart-box">
+      <div class="heart">💛</div>
+      <div class="title">WE FOUND LOVE</div>
+      <div class="subtitle">IN A HOPEFUL PLACE</div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
