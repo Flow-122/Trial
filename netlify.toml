@@ -1,0 +1,5 @@
+[build]
+  # The Vite + React app lives in the Trial1/ subfolder.
+  # Install its dependencies and build it from there.
+  command = "npm ci --prefix Trial1 && npm run build --prefix Trial1"
+  publish = "Trial1/dist"
