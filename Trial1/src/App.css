@@ -1845,10 +1845,29 @@
   color: #dfc597;
 }
 
-.contact-form-note {
-  color: #858579;
-  font-size: 0.48rem;
+.contact-form-status {
+  margin: 0;
+  padding: 6px 8px;
+  border-left: 2px solid;
+  font-size: 0.54rem;
   line-height: 1.4;
+}
+
+.contact-form-status.is-success {
+  border-color: #687a5d;
+  color: #40533d;
+  background: rgba(104, 122, 93, 0.1);
+}
+
+.contact-form-status.is-error {
+  border-color: #a45f4d;
+  color: #78463b;
+  background: rgba(164, 95, 77, 0.1);
+}
+
+.contact-submit:disabled {
+  cursor: wait;
+  opacity: 0.72;
 }
 
 .page-content-closing .page-rule {

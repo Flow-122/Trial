@@ -14,3 +14,13 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+## Contact form setup
+
+Set `VITE_WEB3FORMS_ACCESS_KEY` in `.env.local` for local development and in your deployment environment before building:
+
+```env
+VITE_WEB3FORMS_ACCESS_KEY=your_web3forms_access_key
+```
+
+The access key is included in the client-side app, so use a Web3Forms key intended for browser submissions.

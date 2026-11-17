@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 
+const WEB3FORMS_ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || ''
 const gearTeeth = Array.from({ length: 18 }, (_, index) => index * 20)
 const CURRENT_LOCATION = "Bondo / Siaya, Kenya"
 
@@ -296,25 +297,77 @@ function ExperienceContent() {
 }
 
 function ContactContent() {
-  function handleSubmit(event) {
+  const [formValues, setFormValues] = useState({ name: '', email: '', message: '' })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [formStatus, setFormStatus] = useState(null)
+
+  function handleFieldChange(event) {
+    const { name, value } = event.currentTarget
+    setFormValues((currentValues) => ({ ...currentValues, [name]: value }))
+    setFormStatus(null)
+  }
+
+  async function handleSubmit(event) {
     event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    const subject = `Portfolio message from ${formData.get('name')}`
-    const body = `Name: ${formData.get('name')}\nEmail: ${formData.get('email')}\n\n${formData.get('message')}`
-    window.location.href = `mailto:hello@sheryle.dev?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    if (isSubmitting) return
+
+    const message = {
+      name: formValues.name.trim(),
+      email: formValues.email.trim(),
+      message: formValues.message.trim(),
+    }
+
+    if (!message.name || !message.email || !message.message) {
+      setFormStatus({ type: 'error', message: 'Please complete all fields before sending.' })
+      return
+    }
+
+    if (!WEB3FORMS_ACCESS_KEY) {
+      setFormStatus({
+        type: 'error',
+        message: 'The contact form is not configured yet. Please email sherylflorence3@gmail.com instead.',
+      })
+      return
+    }
+
+    setIsSubmitting(true)
+    setFormStatus(null)
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({ ...message, access_key: WEB3FORMS_ACCESS_KEY }),
+      })
+      const result = await response.json()
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Message submission failed.')
+      }
+
+      setFormValues({ name: '', email: '', message: '' })
+      setFormStatus({ type: 'success', message: "Message sent! I'll get back to you soon." })
+    } catch {
+      setFormStatus({ type: 'error', message: 'Your message could not be sent. Please try again.' })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
     <div className="contact-layout">
       <div className="contact-cards">
-        <a className="contact-card" href="mailto:hello@sheryle.dev">
+        <a className="contact-card" href="mailto:sherylflorence3@gmail.com">
           <span className="contact-icon"><Icon name="mail" /></span>
-          <span><small>EMAIL</small><strong>hello@sheryle.dev</strong></span>
+          <span><small>EMAIL</small><strong>sherylflorence3@gmail.com</strong></span>
           <span className="contact-arrow" aria-hidden="true">↗</span>
         </a>
-        <a className="contact-card" href="https://github.com/sheryle-florence-akinyi" target="_blank" rel="noreferrer">
+        <a className="contact-card" href="https://github.com/Flow-122" target="_blank" rel="noopener noreferrer">
           <span className="contact-icon"><Icon name="repository" /></span>
-          <span><small>GITHUB</small><strong>sheryle-florence-akinyi</strong></span>
+          <span><small>GITHUB</small><strong>@Flow-122</strong></span>
           <span className="contact-arrow" aria-hidden="true">↗</span>
         </a>
         <a
@@ -337,18 +390,28 @@ function ContactContent() {
         </div>
         <label>
           <span>Your name</span>
-          <input name="name" type="text" autoComplete="name" placeholder="Jane Doe" required />
+          <input name="name" type="text" autoComplete="name" placeholder="Jane Doe" value={formValues.name} onChange={handleFieldChange} required disabled={isSubmitting} />
         </label>
         <label>
           <span>Email address</span>
-          <input name="email" type="email" autoComplete="email" placeholder="jane@example.com" required />
+          <input name="email" type="email" autoComplete="email" placeholder="jane@example.com" value={formValues.email} onChange={handleFieldChange} required disabled={isSubmitting} />
         </label>
         <label>
           <span>Your message</span>
-          <textarea name="message" rows="3" placeholder="Tell me a little about it..." required />
+          <textarea name="message" rows="3" placeholder="Tell me a little about it..." value={formValues.message} onChange={handleFieldChange} required disabled={isSubmitting} />
         </label>
-        <button className="contact-submit" type="submit">Prepare email <span aria-hidden="true">↗</span></button>
-        <small className="contact-form-note">Opens your email app to send — your message stays yours.</small>
+        <button className="contact-submit" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Sending...' : 'Send message'} <span aria-hidden="true">↗</span>
+        </button>
+        {formStatus && (
+          <p
+            className={`contact-form-status is-${formStatus.type}`}
+            role={formStatus.type === 'error' ? 'alert' : 'status'}
+            aria-live="polite"
+          >
+            {formStatus.message}
+          </p>
+        )}
       </form>
     </div>
   )
