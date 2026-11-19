@@ -660,6 +660,148 @@ function Gear({ className, delay, label, onUnlock }) {
   )
 }
 
+function AskSheryle() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [message, setMessage] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
+  const [messages, setMessages] = useState([
+    {
+      sender: 'sheryle',
+      text: "Hey there! 👋 I'm Sheryle's virtual self. Ask me anything about who I am, what I'm building, my tech stack, or how we can collaborate!",
+    },
+  ])
+  const messagesRef = useRef(null)
+  const replyTimer = useRef(null)
+
+  useEffect(() => () => {
+    if (replyTimer.current !== null) window.clearTimeout(replyTimer.current)
+  }, [])
+
+  useEffect(() => {
+    if (messagesRef.current) {
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight
+    }
+  }, [messages, isTyping])
+
+  const quickQuestions = [
+    'Tell me about yourself',
+    'What are you building?',
+    "What's your tech stack?",
+    'Where are you based?',
+    'How can I contact you?',
+  ]
+
+  function getReply(question) {
+    const text = question.toLowerCase()
+
+    if (/about|who|yourself|student|name/.test(text)) {
+      return "I'm Sheryle Florence Akinyi, a third-year Computer Science student at Eldoret National Polytechnic. I'm currently completing my industrial attachment at Siaya Community Digital HUB, and I love building thoughtful, tactile web experiences from the ground up."
+    }
+    if (/building|project|worldloom|portfolio|game|godot/.test(text)) {
+      return "Right now I'm building Worldloom, a global tour guide map platform with React, Node.js, and PostgreSQL. I'm also creating this interactive 3D book portfolio and experimenting with 2D game development in Godot."
+    }
+    if (/tech|stack|skills|code|language|react|database/.test(text)) {
+      return 'I work across HTML, CSS, JavaScript, React, Vite, Node.js, PostgreSQL, SQL, and Prisma ORM. I also use Git and GitHub regularly to build and share my work.'
+    }
+    if (/where|based|location|bondo|siaya|remote/.test(text)) {
+      return "I'm based between Bondo and Siaya, Kenya. I'm open to remote collaborations and exciting tech opportunities."
+    }
+    if (/contact|email|github|linkedin|connect|collaborate/.test(text)) {
+      return 'You can email me at sherylflorence3@gmail.com, check out my GitHub at @Flow-122, or connect with me on LinkedIn. You can also use the message form right next to this chat.'
+    }
+
+    return "That's a great question! I'm still teaching my virtual self everything, so feel free to drop me a note in the contact form right here or email me at sherylflorence3@gmail.com and I'll reply personally."
+  }
+
+  function sendMessage(question = message) {
+    const trimmed = question.trim()
+    if (!trimmed || isTyping) return
+
+    setMessages((current) => [...current, { sender: 'visitor', text: trimmed }])
+    setMessage('')
+    setIsTyping(true)
+
+    replyTimer.current = window.setTimeout(() => {
+      setMessages((current) => [...current, { sender: 'sheryle', text: getReply(trimmed) }])
+      setIsTyping(false)
+      replyTimer.current = null
+    }, 500)
+  }
+
+  return (
+    <div className="ask-sheryle-widget">
+      {isOpen && (
+        <section className="ask-sheryle-drawer" aria-label="Ask Sheryle chat">
+          <header className="ask-sheryle-header">
+            <div className="ask-sheryle-avatar" aria-hidden="true">
+              <svg viewBox="0 0 48 48">
+                <circle cx="24" cy="24" r="11" fill="#d3b876" />
+                <circle cx="24" cy="24" r="5" fill="#232623" />
+                <path d="M24 5v38M5 24h38M10.5 10.5l27 27M37.5 10.5l-27 27" stroke="#d3b876" strokeWidth="5" strokeLinecap="round" />
+              </svg>
+            </div>
+            <div>
+              <strong>Ask Sheryle</strong>
+              <span>Keykeeper AI</span>
+            </div>
+            <button className="ask-sheryle-close" type="button" onClick={() => setIsOpen(false)} aria-label="Close chat">×</button>
+          </header>
+
+          <div className="ask-sheryle-messages" ref={messagesRef} aria-live="polite">
+            {messages.map((item, index) => (
+              <div className={`chat-message chat-message-${item.sender}`} key={`${item.sender}-${index}`}>
+                {item.text}
+              </div>
+            ))}
+            {isTyping && <div className="chat-typing" aria-label="Sheryle is typing"><span /><span /><span /></div>}
+          </div>
+
+          <div className="ask-sheryle-chips" aria-label="Quick questions">
+            {quickQuestions.map((question) => (
+              <button type="button" key={question} onClick={() => sendMessage(question)} disabled={isTyping}>{question}</button>
+            ))}
+          </div>
+
+          <form
+            className="ask-sheryle-input"
+            onSubmit={(event) => {
+              event.preventDefault()
+              sendMessage()
+            }}
+          >
+            <input
+              type="text"
+              value={message}
+              onChange={(event) => setMessage(event.target.value)}
+              placeholder="Ask me anything..."
+              aria-label="Message Sheryle"
+            />
+            <button type="submit" disabled={!message.trim() || isTyping}>Send</button>
+          </form>
+        </section>
+      )}
+
+      <button
+        className="ask-my-ai-pill"
+        type="button"
+        onClick={() => setIsOpen((current) => !current)}
+        aria-expanded={isOpen}
+        title="Keykeeper AI"
+      >
+        <svg className="ask-sheryle-gear" viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M24 4l4 5 6-1 2 6 6 3-2 6 2 6-6 3-2 6-6-1-4 5-4-5-6 1-2-6-6-3 2-6-2-6 6-3 2-6 6 1 4-5Z" fill="#b99a5f" stroke="#77613f" strokeWidth="1" />
+          <circle cx="24" cy="24" r="10" fill="#232623" stroke="#d7c18f" strokeWidth="2" />
+          <circle cx="24" cy="24" r="4" fill="#d7c18f" />
+        </svg>
+        <span className="ask-sheryle-label">
+          <strong>Ask Sheryle</strong>
+          <small>Keykeeper AI</small>
+        </span>
+      </button>
+    </div>
+  )
+}
+
 function App() {
   const [bookIsOpen, setBookIsOpen] = useState(false)
   const [isOpening, setIsOpening] = useState(false)
@@ -671,6 +813,7 @@ function App() {
   const [gearsArePulsing, setGearsArePulsing] = useState(false)
   const [activeSpread, setActiveSpread] = useState(0)
   const [turningTo, setTurningTo] = useState(null)
+  const isContactSpreadActive = activeSpread === 2
   const openingTimer = useRef(null)
   const pulseTimer = useRef(null)
   const pulseFrame = useRef(null)
@@ -1022,6 +1165,7 @@ function App() {
           </div>
         </div>
       )}
+      {bookIsOpen && isContactSpreadActive && !isClosing && <AskSheryle />}
     </main>
   )
 }
